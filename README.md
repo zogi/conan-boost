@@ -12,7 +12,7 @@ The packages generated with this **conanfile** can be found in [conan.io](https:
 Download conan client from [Conan.io](https://conan.io) and run:
 
     $ python build.py
-    
+
 ## Upload packages to server
 
     $ conan upload boost/1.57.0@lasote/stable --all

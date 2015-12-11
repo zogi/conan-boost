@@ -6,6 +6,7 @@ import platform, os, sys
 class BoostConan(ConanFile):
     name = "Boost"
     version = "1.57.0" 
+    url = "https://github.com/lasote/conan-boost"
     
     settings = "os", "arch", "compiler", "build_type"   
     FOLDER_NAME = "boost_%s" % version.replace(".", "_") 
