@@ -1278,7 +1278,7 @@ if(Boost_FOUND)
   endforeach()
 else()
   if(Boost_FIND_REQUIRED)
-    # message(SEND_ERROR "Unable to find the requested Boost libraries.\n${Boost_ERROR_REASON}")
+    message(SEND_ERROR "Unable to find the requested Boost libraries.\n${Boost_ERROR_REASON}")
   else()
     if(NOT Boost_FIND_QUIETLY)
       # we opt not to automatically output Boost_ERROR_REASON here as
@@ -1332,10 +1332,3 @@ set(_Boost_COMPONENTS_SEARCHED "${_Boost_COMPONENTS_SEARCHED}"
   CACHE INTERNAL "Components requested for this build tree.")
   
 ENDIF() # END IF HEADER_ONLY
-
-IF(NOT Boost_FOUND)
-    MESSAGE(STATUS "Error=> ${Boost_ERROR_REASON}")
-    MESSAGE(STATUS "Native found didn't work, but don't worry! Setting Conan detected libraries")
-    SET(Boost_LIBRARIES ${CONAN_LIBS_BOOST})
-    SET(Boost_FOUND 1)
-ENDIF()
