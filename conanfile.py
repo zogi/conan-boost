@@ -69,6 +69,19 @@ class BoostConan(ConanFile):
             flags.append("runtime-link=%s" % ("static" if "MT" in str(self.settings.compiler.runtime) else "shared"))
         flags.append("variant=%s" % str(self.settings.build_type).lower())
         flags.append("address-model=%s" % ("32" if self.settings.arch == "x86" else "64"))
+        
+        # LIBCXX DEFINITION
+        libcxx = None
+        try:
+            libcxx = self.settings.compiler.libcxx
+        except:
+            pass
+        if libcxx:
+            tmp = "define=_GLIBCXX_USE_CXX11_ABI="
+            tmp += "1" if libcxx == "libstdc++11" else "0"
+            flags.append(tmp)
+        
+        # JOIN ALL FLAGS
         b2_flags = " ".join(flags)
 
         command = "b2" if self.settings.os == "Windows" else "./b2"
