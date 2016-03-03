@@ -78,7 +78,7 @@ class BoostConan(ConanFile):
             pass
         if libcxx:
             tmp = "define=_GLIBCXX_USE_CXX11_ABI="
-            tmp += "1" if libcxx == "libstdc++11" else "0"
+            tmp += "1" if str(libcxx) == "libstdc++11" else "0"
             flags.append(tmp)
         
         # JOIN ALL FLAGS
