@@ -16,15 +16,40 @@ class BoostConan(ConanFile):
     exports = ["FindBoost.cmake"]
    
     def config(self):
-        # If header only, the compiler, etc, does not affect the package!
         self.counter_config += 1
-        # config is called twice, one before receive the upper dependencies and another before
-        if self.options.header_only and self.counter_config==2:
-            self.output.info("HEADER ONLY")
-            self.settings.clear()
-            self.options.remove("shared")
-        if not self.options.header_only and self.settings.os == "Windows" and self.options.shared and "MT" in str(self.settings.compiler.runtime):
+        # config is called twice, one before receive the upper dependencies and another after
+        if self.settings.compiler == "Visual Studio" and \
+           self.options.shared and "MT" in str(self.settings.compiler.runtime):
             self.options.shared = False
+        
+        if self.settings.compiler == "Visual Studio":
+            try:
+                self.options.remove("fPIC")
+            except: 
+                pass
+        
+        # BZIP2 
+        if self.counter_config==2:
+            if self.settings.os == "Linux" or self.settings.os == "Macos":
+                self.requires.add("bzip2/1.0.6@lasote/stable", private=False)
+                if not self.options.header_only:
+                    self.options["bzip2/1.0.6"].shared = self.options.shared
+            self.requires.add("zlib/1.2.8@lasote/stable", private=False)
+        
+            # Header only
+            if self.options.header_only:
+                self.settings.remove("compiler")
+                self.settings.remove("os")
+                self.settings.remove("arch")
+                self.settings.remove("build_type")
+                self.options.remove("shared")
+
+        if "zlib" in self.requires:
+            if not self.options.header_only:
+                self.options["zlib"].shared = self.options.shared
+        if "bzip2" in self.requires:
+            if not self.options.header_only:
+                self.options["bzip2"].shared = self.options.shared
 
     def source(self):
         zip_name = "%s.zip" % self.FOLDER_NAME if sys.platform == "win32" else "%s.tar.gz" % self.FOLDER_NAME
@@ -38,15 +63,6 @@ class BoostConan(ConanFile):
         if self.options.header_only:
             return
         
-        if self.settings.os == "Linux": # Fixme, just debian based works for building
-            self.output.warn("Some libraries are needed for build Boost. Please enter sudo password if requested...")
-	    self.run("sudo apt-get install libbz2-dev || true")
-            self.run("sudo apt-get install gcc-%s-multilib || true" % self.settings.compiler.version)
-            self.run("sudo apt-get install g++-%s-multilib || true" % self.settings.compiler.version)
-            self.run("sudo dpkg --add-architecture i386 || true")
-            self.run("sudo apt-get update || true")
-            self.run("sudo apt-get install libbz2-dev:i386 || true")
-
         command = "bootstrap" if self.settings.os == "Windows" else "./bootstrap.sh"
         try:
             self.run("cd %s && %s" % (self.FOLDER_NAME, command))
