@@ -78,6 +78,22 @@ matrix:
          osx_image: xcode8 # apple-clang 8
          language: generic
          env: CONAN_CURRENT_PAGE=4
+       - os: osx
+         osx_image: xcode8 # apple-clang 8
+         language: generic
+         env: CONAN_CURRENT_PAGE=5
+       - os: osx
+         osx_image: xcode8 # apple-clang 8
+         language: generic
+         env: CONAN_CURRENT_PAGE=6
+       - os: osx
+         osx_image: xcode8 # apple-clang 8
+         language: generic
+         env: CONAN_CURRENT_PAGE=7
+       - os: osx
+         osx_image: xcode8 # apple-clang 8
+         language: generic
+         env: CONAN_CURRENT_PAGE=8
 
        - os: osx
          osx_image: xcode7.3 # apple-clang 7.0
