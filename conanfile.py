@@ -285,10 +285,15 @@ class BoostConan(ConanFile):
                 self.cpp_info.defines.append("BOOST_PYTHON_STATIC_LIB")
         # Remove excluded libraries
         for option in self.options.fields:
-            if option.startswith('without_'):
+            if option.startswith('without_') and getattr(self.options, option):
                 lib_name = option[8:]
-                if getattr(self.options, option) and lib_name in libs:
-                    libs.remove(lib_name)
+                # Check for substring matches with libraries, and remove if appropriate
+                for l in filter(lambda x: x.find(lib_name) >= 0, libs):
+                    libs.remove(l)
+        # We need a direct rule for boost_prg_exec_monitor, which is constructed
+        # when without_test is NOT set (but is not a direct substring match)
+        if self.options["without_test"]:
+            libs.remove("prg_exec_monitor")
 
         if self.settings.compiler != "Visual Studio":
             self.cpp_info.libs.extend(["boost_%s" % lib for lib in libs])
