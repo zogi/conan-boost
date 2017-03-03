@@ -288,8 +288,8 @@ class BoostConan(ConanFile):
             if option.startswith('without_') and getattr(self.options, option):
                 lib_name = option[8:]
                 # Check for substring matches with libraries, and remove if appropriate
-                for l in filter(lambda x: x.find(lib_name) >= 0, libs):
-                    libs.remove(l)
+                libs = [l for l in libs if not lib_name in l]
+
         # We need a direct rule for boost_prg_exec_monitor, which is constructed
         # when without_test is NOT set (but is not a direct substring match)
         if self.options["without_test"]:
