@@ -285,10 +285,15 @@ class BoostConan(ConanFile):
                 self.cpp_info.defines.append("BOOST_PYTHON_STATIC_LIB")
         # Remove excluded libraries
         for option in self.options.fields:
-            if option.startswith('without_'):
+            if option.startswith('without_') and getattr(self.options, option):
                 lib_name = option[8:]
-                if getattr(self.options, option) and lib_name in libs:
-                    libs.remove(lib_name)
+                # Check for substring matches with libraries, and remove if appropriate
+                libs = [l for l in libs if not lib_name in l]
+
+        # We need a direct rule for boost_prg_exec_monitor, which is constructed
+        # when without_test is NOT set (but is not a direct substring match)
+        if self.options["without_test"]:
+            libs.remove("prg_exec_monitor")
 
         if self.settings.compiler != "Visual Studio":
             self.cpp_info.libs.extend(["boost_%s" % lib for lib in libs])
@@ -311,9 +316,8 @@ class BoostConan(ConanFile):
             suffix = "vc%d-%s%s-%s" %  (visual_version, runtime, abi_tags, version)
             prefix = "lib" if not self.options.shared else ""
 
-
             win_libs.extend(["%sboost_%s-%s" % (prefix, lib, suffix) for lib in libs if lib not in ["exception", "test_exec_monitor"]])
-            win_libs.extend(["libboost_exception-%s" % suffix, "libboost_test_exec_monitor-%s" % suffix])
+            win_libs.extend(["libboost_%s-%s" % (lib, suffix) for lib in libs if lib in ["exception", "test_exec_monitor"]])
 
             #self.output.warn("EXPORTED BOOST LIBRARIES: %s" % win_libs)
             self.cpp_info.libs.extend(win_libs)
