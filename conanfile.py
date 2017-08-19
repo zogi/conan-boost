@@ -48,6 +48,7 @@ class BoostConan(ConanFile):
         "fPIC=False", \
         "python=False", \
         "without_iostreams=False", \
+        "without_regex=False", \
         "without_system=False", \
         "without_thread=False", \
         "without_atomic=True", \
@@ -67,7 +68,6 @@ class BoostConan(ConanFile):
         "without_mpi=True", \
         "without_program_options=True", \
         "without_random=True", \
-        "without_regex=True", \
         "without_serialization=True", \
         "without_signals=True", \
         "without_test=True", \
