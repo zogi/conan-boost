@@ -45,7 +45,7 @@ class BoostConan(ConanFile):
 
     default_options = "shared=False", \
         "header_only=False", \
-        "fPIC=False", \
+        "fPIC=True", \
         "python=False", \
         "without_iostreams=False", \
         "without_regex=False", \
