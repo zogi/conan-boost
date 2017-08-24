@@ -4,8 +4,8 @@ import platform
 
 
 if __name__ == "__main__":
-    builder = ConanMultiPackager()
-    builder.add_common_builds(shared_option_name="Boost:shared", pure_c=False)    
+    builder = ConanMultiPackager(username="lasote", channel="stable")
+    builder.add_common_builds(shared_option_name="Boost:shared", pure_c=False)
     builder.builds.append([{}, {"Boost:header_only": True}])
     if platform.system() == "Linux":
         filtered_builds = []
