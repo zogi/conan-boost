@@ -235,14 +235,13 @@ class BoostConan(ConanFile):
 
     def prepare_deps_options_env(self):
         ret = {}
-#         if self.settings.os == "Linux" and "bzip2" in self.requires:
-#             include_path = self.deps_cpp_info["bzip2"].include_paths[0]
-#             lib_path = self.deps_cpp_info["bzip2"].lib_paths[0]
-#             lib_name = self.deps_cpp_info["bzip2"].libs[0]
-#             ret["BZIP2_BINARY"] = lib_name
-#             ret["BZIP2_INCLUDE"] = include_path
-#             ret["BZIP2_LIBPATH"] = lib_path
-            
+        if self.settings.os == "Linux" and "bzip2" in self.requires:
+            include_path = self.deps_cpp_info["bzip2"].include_paths[0]
+            lib_path = self.deps_cpp_info["bzip2"].lib_paths[0]
+            lib_name = self.deps_cpp_info["bzip2"].libs[0]
+            ret["BZIP2_BINARY"] = lib_name
+            ret["BZIP2_INCLUDE"] = include_path
+            ret["BZIP2_LIBPATH"] = lib_path
         return ret
 
     def package(self):
