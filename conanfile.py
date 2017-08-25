@@ -119,15 +119,20 @@ class BoostConan(ConanFile):
             self.info.requires.clear()
             self.info.settings.clear()
 
+    def zip_name(self):
+        extension = "zip" if sys.platform == "win32" else "tar.gz"
+        return "%s.%s" % (self.FOLDER_NAME, extension)
+
     def source(self):
-        zip_name = "%s.zip" % self.FOLDER_NAME if sys.platform == "win32" else "%s.tar.gz" % self.FOLDER_NAME
+        zip_name = self.zip_name()
         url = "http://sourceforge.net/projects/boost/files/boost/%s/%s/download" % (self.version, zip_name)
         self.output.info("Downloading %s..." % url)
         tools.download(url, zip_name)
-        tools.unzip(zip_name, ".")
-        os.unlink(zip_name)
 
     def build(self):
+        zip_name = self.zip_name()
+        tools.unzip(zip_name, ".")
+        os.unlink(zip_name)
         if self.options.header_only:
             self.output.warn("Header only package, skipping build")
             return
